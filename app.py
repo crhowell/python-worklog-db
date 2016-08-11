@@ -1,6 +1,9 @@
-from log import Log
+from worklog import WorkLog
 
 
 if __name__ == '__main__':
-    log = Log()
-    log.add_task()
+    print('DEBUG START')
+    worklog = WorkLog()
+    worklog.main()
+    print('DEBUG END')
+
