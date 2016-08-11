@@ -7,7 +7,7 @@ import settings
 class Log:
 
     def all_tasks(self):
-        tasks = Task.select().order_by(Task.date.desc())
+        tasks = self.task.select().order_by(Task.date.desc())
         return tasks
 
     def add_task(self):
@@ -16,7 +16,7 @@ class Log:
         t_time = Log.prompt_valid_input('time', 'Time Spent (in minutes)')
         date = Log.prompt_valid_input('date', 'Task Date')
         notes = Log.prompt_valid_input('notes', 'Notes')
-        Task.create(
+        self.task.create(
             employee=emp_name,
             name=t_name,
             mins=t_time,
@@ -79,3 +79,4 @@ class Log:
     def __init__(self):
         self.db = settings.DB
         self.connect()
+        self.task = Task
