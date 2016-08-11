@@ -6,6 +6,54 @@ import settings
 
 class Log:
 
+    def update_task(self, task=None):
+        if task is not None:
+            e_name = input(' Employee Name [{}]: '.format(task.employee))
+            if e_name:
+                task.employee = e_name
+            t_name = input(' Task Name [{}]: '.format(task.name))
+            if t_name:
+                task.name = t_name
+
+            t_time = input(' Time Spent [{}]: '.format(task.mins))
+            if t_time:
+                if not Log.valid_num(t_time):
+                    t_time = self.prompt_valid_input(
+                        'time', ' Time Spent [{}]: '.format(task.mins))
+                task.mins = t_time
+
+            date = input(' Task Date [{}]: '.format(task.date))
+            if date:
+                if not Log.valid_date(date):
+                    date = self.prompt_valid_input(
+                        'date', ' Task Date [{}]: '.format(task.date))
+                task.date = date
+
+            notes = input(' Notes [{}]: '.format(task.notes))
+            if notes:
+                task.notes = notes
+
+            task.save()
+
+    @staticmethod
+    def prompt_verify():
+        is_sure = input(' ARE YOU SURE? (Y)/(N): ').lower()
+        if is_sure:
+            if is_sure[0] == 'y':
+                return True
+            else:
+                return False
+
+    def delete_task(self, task=None):
+        if task is not None:
+            if Log.prompt_verify():
+                task.delete_instance()
+                print(' Task Deleted.')
+                return True
+            else:
+                return False
+        return False
+
     def all_tasks(self):
         tasks = self.task.select().order_by(Task.date.desc())
         return tasks
@@ -74,6 +122,8 @@ class Log:
                         return usr_input
                 elif method == 'notes':
                     return usr_input
+                else:
+                    break
         return None
 
     def __init__(self):

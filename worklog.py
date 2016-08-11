@@ -1,4 +1,5 @@
 from datetime import datetime
+import sys
 
 from log import Log
 import settings
@@ -14,6 +15,12 @@ class WorkLog:
             menu_choice = self.prompt_menu_choice(choices)
             self.get_main_selection(menu_choice)
             self.clear_screen()
+
+    def edit_task(self, task=None):
+        if task is not None:
+            print('\n * Leave blank to keep field unchanged. *')
+            self.log.update_task(task)
+
 
     def display_paginated(self, tasks=[]):
         if tasks:
@@ -31,12 +38,15 @@ class WorkLog:
                 elif choice == 'n':
                     i += 1
                 elif choice == 'e':
-                    # TODO
-                    print('edit placeholder...')
+                    self.log.update_task(tasks[i])
+                    self.prompt_action_status(' Task updated.')
                     break
                 elif choice == 'd':
-                    # TODO
-                    print('delete placeholder...')
+                    is_deleted = self.log.delete_task(tasks[i])
+                    if is_deleted:
+                        self.prompt_action_status(' Task deleted.')
+                    else:
+                        self.prompt_action_status(' Task NOT deleted.')
                     break
                 elif choice == 'q':
                     break
@@ -49,7 +59,18 @@ class WorkLog:
                 self.clear_screen()
             elif choice == 'f':
                 tasks = self.log.all_tasks()
-                self.display_paginated(tasks)
+                if tasks:
+                    self.display_paginated(tasks)
+                else:
+                    self.prompt_action_status(' There are no entries.')
+            elif choice == 'q':
+                self.clear_screen()
+                print('\n Exiting...')
+                print("\n Thanks for using {}'s Worklog".format(
+                    settings.COMPANY_NAME
+                ))
+                print(' Have a great day!')
+                sys.exit(0)
 
     @staticmethod
     def prompt_action_status(prompt='\n'):
@@ -95,12 +116,11 @@ class WorkLog:
     def display_task(task=None):
         if task is not None:
             print('=' * 45)
-            print(' Task Name: {}\n Minutes Spent: {}\n Notes: {}\n Date: {}'.format(
-                task.name,
-                task.mins,
-                task.notes,
-                task.date
-            ))
+            print(' Task Name: {}'.format(task.name))
+            print(' Employee: {}'.format(task.employee))
+            print(' Date: {}'.format(task.date))
+            print(' Time Spent: {}'.format(task.mins))
+            print(' Notes: {}'.format(task.notes))
             print('=' * 45)
 
     @staticmethod
