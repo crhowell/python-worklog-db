@@ -1,4 +1,4 @@
-from worklog import WorkLog
+from logs.worklog import WorkLog
 
 
 if __name__ == '__main__':

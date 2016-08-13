@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from models.task import Task
 import settings
+from logs.models.task import Task
 
 
 class Log:
