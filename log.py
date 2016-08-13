@@ -35,15 +35,6 @@ class Log:
 
             task.save()
 
-    @staticmethod
-    def prompt_verify():
-        is_sure = input(' ARE YOU SURE? (Y)/(N): ').lower()
-        if is_sure:
-            if is_sure[0] == 'y':
-                return True
-            else:
-                return False
-
     def delete_task(self, task=None):
         if task is not None:
             if Log.prompt_verify():
@@ -53,6 +44,28 @@ class Log:
             else:
                 return False
         return False
+
+    def find_task(self, by=None, search=''):
+        result = []
+        if by is not None:
+            if by == 'employee':
+                return self.task.select(Task).where(
+                    Task.employee.contains(search))
+            elif by == 'rdate':
+                return self.task.select().where(
+                    self.task.date.between(search[0], search[1]))
+            elif by == 'rtime':
+                return self.task.select(Task).where(
+                    Task.mins >= search[0], Task.mins <= search[1])
+            elif by == 'date':
+                return self.task.select(Task).where(Task.date == search)
+            elif by == 'term':
+                return self.task.select(Task).where(Task.name == search)
+
+            # elif by == 'project':
+            #     return self.task.select(Task).where(Task.project == search)
+        return result
+
 
     def all_tasks(self):
         tasks = self.task.select().order_by(Task.date.desc())
@@ -125,6 +138,19 @@ class Log:
                 else:
                     break
         return None
+
+    def convert_date(self, date, fmt='%m/%d/%Y'):
+        if self.valid_date(date):
+            return datetime.strptime(date, fmt)
+
+    @staticmethod
+    def prompt_verify():
+        is_sure = input(' ARE YOU SURE? (Y)/(N): ').lower()
+        if is_sure:
+            if is_sure[0] == 'y':
+                return True
+            else:
+                return False
 
     def __init__(self):
         self.db = settings.DB

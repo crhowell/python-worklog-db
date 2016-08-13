@@ -21,6 +21,21 @@ class WorkLog:
             print('\n * Leave blank to keep field unchanged. *')
             self.log.update_task(task)
 
+    def display_find_menu(self):
+        """Display to terminal, the Find sub-menu"""
+        self.clear_screen()
+        print('\n Find By...')
+        print('{}{}'.format(' ', '-' * 45))
+        print('{}\n{}\n{}\n{}\n{}\n{}\n'.format(
+            ' (E)mployee Name',
+            ' (L)ist of Dates'
+            ' (R)ange of Dates',
+            ' (T)ime spent (range)',
+            ' (S)earch term',
+            ' (P)roject related',
+            ' (Q)uit menu'
+        ))
+        return ['e', 'l', 'r', 't', 's', 'p', 'q']
 
     def display_paginated(self, tasks=[]):
         if tasks:
@@ -51,6 +66,51 @@ class WorkLog:
                 elif choice == 'q':
                     break
 
+    def prompt_find_choice(self, choice=''):
+        result = None
+        while True:
+            if choice == 'e':
+                # Find by employee
+                print(' Search by Employee Name ')
+                name = input(' Employee Name: ')
+                if name:
+                    result = self.log.find_task('employee', name)
+                    break
+                else:
+                    print(' ** You must enter a name to search for. ** ')
+                    continue
+            elif choice == 'l':
+                pass
+            elif choice == 'r':
+                # Find by Range Dates
+                print(' Date format is: mm/dd/yyyy')
+                date1 = self.log.prompt_valid_input('date', 'First Date (older)')
+                date2 = self.log.prompt_valid_input('date', 'Recent Date (recent)')
+                result = self.log.find_task('rdate', [date1, date2])
+                break
+            elif choice == 't':
+                # Find by Time Spent
+                min_time = input('\n Enter MINimum time (in minutes): ')
+                if self.log.valid_num(min_time):
+                    max_time = input(' \n Enter MAXimum time (in minutes): ')
+                    if self.log.valid_num(max_time):
+                        result = self.log.find_task('rtime', [min_time, max_time])
+                        break
+                    else:
+                        print('\n ** Please enter a valid MAX time.')
+                else:
+                    print('\n ** Please enter a valid MIN time.')
+            # Find by Search Term
+            elif choice == 's':
+                pass
+            # Find by Project Name
+            elif choice == 'p':
+                pass
+            elif choice == 'q':
+                break
+
+        return result
+
     def get_main_selection(self, choice=''):
         if choice:
             if choice == 'a':
@@ -58,11 +118,18 @@ class WorkLog:
                 self.prompt_action_status('Task Added')
                 self.clear_screen()
             elif choice == 'f':
-                tasks = self.log.all_tasks()
-                if tasks:
-                    self.display_paginated(tasks)
+                choices = self.display_find_menu()
+                choice = self.prompt_menu_choice(choices)
+                search = self.prompt_find_choice(choice)
+                if search:
+                    self.display_paginated(search)
                 else:
-                    self.prompt_action_status(' There are no entries.')
+                    self.prompt_action_status('No results found.')
+
+                # if tasks:
+                #     self.display_paginated(tasks)
+                # else:
+                #     self.prompt_action_status(' There are no entries.')
             elif choice == 'q':
                 self.clear_screen()
                 print('\n Exiting...')
