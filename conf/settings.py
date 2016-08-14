@@ -15,4 +15,3 @@ FILENAME = COMPANY_NAME.lower().replace(' ', '_') + '.db'
 # SQLite Database Location
 DB = SqliteDatabase(FILENAME)
 
-
