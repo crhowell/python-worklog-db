@@ -2,6 +2,7 @@ from datetime import datetime
 
 from conf import settings
 from logs.models.task import Task
+from peewee import *
 
 
 class Log:
@@ -26,9 +27,12 @@ class Log:
         task_id -- Model ID of the Task
         """
         if task_id is not None:
-            task = self.find_task('id', task_id)
-            task.delete_instance()
-            return True
+            try:
+                task = self.find_task('id', task_id)
+                task.delete_instance()
+                return True
+            except DoesNotExist:
+                return False
         else:
             return False
 
@@ -59,6 +63,8 @@ class Log:
             elif by == 'project':
                 return self.task.select(Task).where(
                     Task.project.contains(search))
+            else:
+                return False
         else:
             return False
 
@@ -81,16 +87,20 @@ class Log:
                 if v is None:
                     return False
             new_task = self.task.create(**task)
-            return True if isinstance(new_task, Task) else False
+            return new_task
         else:
-            return False
+            return None
 
     def connect(self):
         """Creates or connects to database,
         defined in conf/settings.py.
         """
-        self.db.connect()
-        self.db.create_tables([Task], safe=True)
+        if isinstance(self.db, SqliteDatabase):
+            self.db.connect()
+            self.db.create_tables([Task], safe=True)
+            return True
+        else:
+            return False
 
     @staticmethod
     def parse_project_name(name=None):
@@ -145,6 +155,6 @@ class Log:
             return False
 
     def __init__(self):
-        self.db = settings.DB
+        self.db = SqliteDatabase(settings.DB)
         self.connect()
         self.task = Task

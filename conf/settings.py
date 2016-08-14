@@ -1,5 +1,4 @@
 import os
-from peewee import SqliteDatabase
 
 
 # Display Date Format, ex: 2016 Jan 01
@@ -13,5 +12,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FILENAME = COMPANY_NAME.lower().replace(' ', '_') + '.db'
 
 # SQLite Database Location
-DB = SqliteDatabase(FILENAME)
+DB = FILENAME
+
 
