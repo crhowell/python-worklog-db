@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from peewee import *
-import settings
+
+from conf import settings
 
 
 class Task(Model):

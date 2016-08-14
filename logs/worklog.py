@@ -1,8 +1,8 @@
 import sys
 from datetime import datetime
 
-import settings
-from logs.log import Log
+from conf import settings
+from .log import Log
 
 
 class WorkLog:

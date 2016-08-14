@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import settings
+from conf import settings
 from logs.models.task import Task
 
 
