@@ -6,14 +6,25 @@ from logs.models.task import Task
 
 class Log:
 
-    def update_task(self, data={}):
-        if data:
-            q = Task.update(**data['edits']).where(Task.id == data['id'])
+    def update_task(self, task_id=None, edits={}):
+        """Updates a Task by ID and given 'edits' values.
+
+        Keyword arguments:
+        task_id -- Model ID of the Task
+        edits -- Dict of Task values
+        """
+        if task_id is not None and edits:
+            q = Task.update(**edits).where(Task.id == task_id)
             q.execute()
             return True
         return False
 
     def delete_task(self, task_id=None):
+        """Deletes a Task instance by ID.
+
+        Keyword arguments:
+        task_id -- Model ID of the Task
+        """
         if task_id is not None:
             task = self.find_task('id', task_id)
             task.delete_instance()
@@ -22,6 +33,12 @@ class Log:
             return False
 
     def find_task(self, by=None, search=''):
+        """Find a Task in Database by method and search term.
+
+        Keyword arguments:
+        by -- method of field in which to search.
+        search -- search term in which to look for.
+        """
         result = []
         if by is not None:
             if by == 'employee':
@@ -48,10 +65,17 @@ class Log:
         return result
 
     def all_tasks(self):
+        """Retrieves all Tasks from database"""
         tasks = self.task.select().order_by(Task.date.desc())
         return tasks
 
     def add_task(self, task={}):
+        """Given a Dict of Task values,
+        creates a new Task and saves to database.
+
+        Keyword arguments:
+        task -- Dict of Task values.
+        """
         if task:
             for k, v in task.items():
                 if v is None:
@@ -62,11 +86,20 @@ class Log:
             return False
 
     def connect(self):
+        """Creates or connects to database,
+        defined in conf/settings.py.
+        """
         self.db.connect()
         self.db.create_tables([Task], safe=True)
 
     @staticmethod
     def parse_project_name(name=None):
+        """Converts a project name into a consistent format,
+        'Project Name' becomes 'project_name'.
+
+        Keyword arguments:
+        name -- User input project name
+        """
         if name is not None:
             return name.lower().replace(' ', '_')
         else:
@@ -99,6 +132,12 @@ class Log:
 
     @staticmethod
     def convert_date(date, fmt='%m/%d/%Y'):
+        """Returns a Date obj, given a string date and format.
+
+        Keyword arguments:
+        date -- a string date
+        fmt -- format of the passed in date
+        """
         try:
             date = datetime.strptime(date, fmt)
             return date
