@@ -8,6 +8,7 @@ from .log import Log
 class WorkLog:
 
     def main(self):
+        """Main Program Loop"""
         self.clear_screen()
         while True:
             print("\n {}'s WorkLog\n".format(settings.COMPANY_NAME))
@@ -17,6 +18,11 @@ class WorkLog:
             self.clear_screen()
 
     def edit_task(self, task=None):
+        """Given a Task prompts for changes.
+
+        Keyword arguments:
+        task -- a Task
+        """
         if task is not None:
             print('\n * Leave blank to keep field unchanged. *')
 
@@ -78,6 +84,12 @@ class WorkLog:
         return ['e', 'l', 'r', 't', 's', 'p', 'q']
 
     def display_paginated(self, tasks=[]):
+        """Loops through a list of Task objects,
+        for display to terminal.
+
+        Keyword arguments:
+        tasks -- a list of Task Model objects
+        """
         if tasks:
             i = 0
             while True:
@@ -107,6 +119,11 @@ class WorkLog:
                     break
 
     def prompt_find_choice(self, choice=''):
+        """Prompts user for input based on given choice.
+
+        Keyword arguments:
+        choice -- a string of 1 character (lowercase)
+        """
         result = None
         if choice:
             while True:
@@ -184,6 +201,7 @@ class WorkLog:
 
     @staticmethod
     def prompt_verify():
+        """Returns True if user enters a 'Y'"""
         is_sure = input(' ARE YOU SURE? (Y)/(N): ').lower()
         if is_sure:
             if is_sure[0] == 'y':
@@ -193,6 +211,13 @@ class WorkLog:
 
     @staticmethod
     def prompt_valid_input(method='', prmpt=''):
+        """Prompts user for valid input,
+        based-on provided method.
+
+        Keyword arguments:
+        method -- a lowercase string of validation method
+        prmpt -- a prompt to be displayed with input
+        """
         if method and prmpt:
             while True:
                 usr_input = input(' {}: '.format(prmpt))
@@ -218,6 +243,9 @@ class WorkLog:
         return None
 
     def prompt_task(self):
+        """Prompts user for valid Task values,
+         Returns a Dict of Task values.
+        """
         emp_name = self.prompt_valid_input('project', 'Employee Name')
         project = self.prompt_valid_input('name', 'Project Name')
         t_name = self.prompt_valid_input('name', 'Task Name')
@@ -235,6 +263,7 @@ class WorkLog:
 
     @staticmethod
     def prompt_action_status(prompt='\n'):
+        """Displays prompt, waits for user to press Enter."""
         input('\n {}. Press ENTER to continue.'.format(prompt))
 
     @staticmethod
@@ -258,6 +287,9 @@ class WorkLog:
 
     @staticmethod
     def display_verify():
+        """Displays 'ARE YOU SURE?',
+        Returns a list of valid choices.
+        """
         print(' ** ARE YOU SURE? (Y)/(N)')
         return ['y', 'n']
 
@@ -275,6 +307,7 @@ class WorkLog:
 
     @staticmethod
     def display_task(task=None):
+        """Displays 1 Task to terminal"""
         if task is not None:
             print('=' * 45)
             print(' Project Name: {}'.format(task.project_name))
