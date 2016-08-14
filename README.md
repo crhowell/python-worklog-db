@@ -10,3 +10,15 @@ A Python terminal application that uses a database to store timesheets.
 2. `cd` into the project directory
 3. Type the following in the project directory:
     `python app.py`
+
+## To Test
+1. Open a command-line or terminal window.
+2. `cd` into the project directory.
+3. Type the following:
+
+    For Python UnitTest
+    `python -m unittest test.test_log`
+    
+    For Python Coverage
+    `coverage run -m test.test_log`
+    
