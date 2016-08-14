@@ -39,8 +39,9 @@ class Log:
                 return self.task.select(Task).where(Task.name == search)
             elif by == 'id':
                 return self.task.get(Task.id == search)
-            # elif by == 'project':
-            #     return self.task.select(Task).where(Task.project == search)
+            elif by == 'project':
+                return self.task.select(Task).where(
+                    Task.project.contains(search))
         else:
             return False
 
@@ -63,6 +64,13 @@ class Log:
     def connect(self):
         self.db.connect()
         self.db.create_tables([Task], safe=True)
+
+    @staticmethod
+    def parse_project_name(name=None):
+        if name is not None:
+            return name.lower().replace(' ', '_')
+        else:
+            return ''
 
     @staticmethod
     def valid_date(date):
@@ -96,7 +104,6 @@ class Log:
             return date
         except ValueError:
             return False
-
 
     def __init__(self):
         self.db = settings.DB

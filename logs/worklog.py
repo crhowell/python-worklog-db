@@ -19,24 +19,33 @@ class WorkLog:
     def edit_task(self, task=None):
         if task is not None:
             print('\n * Leave blank to keep field unchanged. *')
+
             e_name = input(' Employee Name [{}]: '.format(task.employee))
             if e_name:
                 task.employee = e_name
+
+            p_name = input(' Project Name [{}]: '.format(task.project_name))
+            if p_name:
+                task.project = self.log.parse_project_name(p_name)
+
             t_name = input(' Task Name [{}]: '.format(task.name))
             if t_name:
                 task.name = t_name
+
             t_time = input(' Time Spent [{}]: '.format(task.mins))
             if t_time:
                 if not Log.valid_num(t_time):
                     t_time = self.prompt_valid_input(
                         'time', ' Time Spent [{}]: '.format(task.mins))
                 task.mins = t_time
+
             date = input(' Task Date [{}]: '.format(task.date))
             if date:
                 if not Log.valid_date(date):
                     date = self.prompt_valid_input(
                         'date', ' Task Date [{}]: '.format(task.date))
                 task.date = date
+
             notes = input(' Notes [{}]: '.format(task.notes))
             if notes:
                 task.notes = notes
@@ -63,7 +72,7 @@ class WorkLog:
             ' (R)ange of Dates',
             ' (T)ime spent (range)',
             ' (S)earch term',
-            ' (P)roject related',
+            ' (P)roject name',
             ' (Q)uit menu'
         ))
         return ['e', 'l', 'r', 't', 's', 'p', 'q']
@@ -137,7 +146,10 @@ class WorkLog:
                     pass
                 # Find by Project Name
                 elif choice == 'p':
-                    pass
+                    project_name = self.prompt_valid_input('name', 'Project Name')
+                    p_name = self.log.parse_project_name(project_name)
+                    result = self.log.find_task('project', p_name)
+                    break
                 elif choice == 'q':
                     break
         else:
@@ -201,20 +213,20 @@ class WorkLog:
                     else:
                         print(' ** You must enter a valid date MM/DD/YYYY, ' +
                               'try again. **')
-                elif method == 'notes':
-                    return usr_input
                 else:
-                    break
+                    return usr_input
         return None
 
     def prompt_task(self):
-        emp_name = self.prompt_valid_input('name', 'Employee Name')
+        emp_name = self.prompt_valid_input('project', 'Employee Name')
+        project = self.prompt_valid_input('name', 'Project Name')
         t_name = self.prompt_valid_input('name', 'Task Name')
         t_time = self.prompt_valid_input('time', 'Time Spent (in minutes)')
         date = self.prompt_valid_input('date', 'Task Date')
         notes = self.prompt_valid_input('notes', 'Notes')
         return {
             'employee': emp_name,
+            'project': project,
             'name': t_name,
             'mins': t_time,
             'date': date,
@@ -265,6 +277,7 @@ class WorkLog:
     def display_task(task=None):
         if task is not None:
             print('=' * 45)
+            print(' Project Name: {}'.format(task.project_name))
             print(' Task Name: {}'.format(task.name))
             print(' Employee: {}'.format(task.employee))
             print(' Date: {}'.format(task.date))
