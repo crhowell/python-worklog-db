@@ -18,9 +18,12 @@ A Python terminal application that uses a database to store timesheets.
 3. Type the following (outside of test directory):
 
     For Python UnitTest
+    
     `python -m unittest test.test_log`
     
     For Coverage and Coverage Report
+    
     `coverage run -m test.test_log`
+
     `coverage report -i`
     
