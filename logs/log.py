@@ -6,6 +6,11 @@ from peewee import *
 
 
 class Log:
+    """Log acts as a layer between WorkLog and Task.
+
+    Log contains validation for a Task and calls the
+    Task model methods to perform CRUD operations.
+    """
 
     def update_task(self, task_id=None, edits={}):
         """Updates a Task by ID and given 'edits' values.

@@ -1,3 +1,18 @@
+"""
+Application Settings for Python WorkLog w DB
+
+DATE_FORMAT: Is the display format to be used for
+display in the terminal when a Task is being shown.
+
+COMPANY_NAME: Used for the company title prompts inside
+the application. Also used as reference for database filename.
+
+Ex:
+COMPANY_NAME = 'MY_COMPANY'
+will look for or create a database file, named 'my_company.db'
+
+"""
+
 import os
 
 

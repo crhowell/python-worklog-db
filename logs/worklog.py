@@ -6,6 +6,13 @@ from .log import Log
 
 
 class WorkLog:
+    """WorkLog handles displaying and prompting.
+    
+    WorkLog displays menus to the terminal, waits
+    for input from the user and makes calls to an
+    instance of Log to perform actions on a selected
+    Task.
+    """
 
     def main(self):
         """Main Program Loop"""
