@@ -13,7 +13,7 @@ class Task(Model):
     name = CharField(max_length=30)
     mins = IntegerField()
     notes = TextField(default='')
-    date = DateField(default=datetime.now)
+    date = DateField(default=datetime.today)
 
     class Meta:
         database = db

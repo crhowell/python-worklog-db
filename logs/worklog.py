@@ -167,7 +167,9 @@ class WorkLog:
                         print('\n ** Please enter a valid MIN time.')
                 # Find by Search Term
                 elif choice == 's':
-                    pass
+                    term = input(' Search Term: ')
+                    result = self.log.find_task('term', term)
+                    break
                 # Find by Project Name
                 elif choice == 'p':
                     project_name = self.prompt_valid_input('name', 'Project Name')
@@ -185,17 +187,22 @@ class WorkLog:
         if choice:
             if choice == 'a':
                 task = self.prompt_task()
-                self.log.add_task(task)
-                self.prompt_action_status('Task Added')
+                added = self.log.add_task(task)
+                if added:
+                    self.prompt_action_status('Task Added')
+                else:
+                    self.prompt_action_status('Task NOT Added')
+
                 self.clear_screen()
             elif choice == 'f':
                 choices = self.display_find_menu()
                 choice = self.prompt_menu_choice(choices)
                 search = self.prompt_find_choice(choice)
-                if search:
-                    self.display_paginated(search)
-                else:
-                    self.prompt_action_status('No results found.')
+                if choice != 'q':
+                    if search:
+                        self.display_paginated(search)
+                    else:
+                        self.prompt_action_status('No results found.')
 
             elif choice == 'q':
                 self.clear_screen()
@@ -253,20 +260,22 @@ class WorkLog:
         """Prompts user for valid Task values,
          Returns a Dict of Task values.
         """
+
+        task = {}
         emp_name = self.prompt_valid_input('project', 'Employee Name')
+        task['employee'] = emp_name
         project = self.prompt_valid_input('name', 'Project Name')
+        task['project'] = project
         t_name = self.prompt_valid_input('name', 'Task Name')
+        task['name'] = t_name
         t_time = self.prompt_valid_input('time', 'Time Spent (in minutes)')
+        task['mins'] = t_time
         date = self.prompt_valid_input('date', 'Task Date')
+        task['date'] = date
         notes = self.prompt_valid_input('notes', 'Notes')
-        return {
-            'employee': emp_name,
-            'project': project,
-            'name': t_name,
-            'mins': t_time,
-            'date': date,
-            'notes': notes
-        }
+        task['notes'] = notes
+
+        return task
 
     @staticmethod
     def prompt_action_status(prompt='\n'):

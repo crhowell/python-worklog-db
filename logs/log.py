@@ -48,58 +48,62 @@ class Log:
         by -- method of field in which to search.
         search -- search term in which to look for.
         """
-        result = []
+
         if by is not None:
             if by == 'employee':
-                return self.task.select(Task).where(
+                return self.task.select().where(
                     Task.employee.contains(search))
             elif by == 'rdate':
                 return self.task.select().where(
                     self.task.date.between(search[0], search[1]))
             elif by == 'rtime':
-                return self.task.select(Task).where(
+                return self.task.select().where(
                     Task.mins >= search[0], Task.mins <= search[1])
             elif by == 'date':
-                return self.task.select(Task).where(Task.date == search)
+                return self.task.select().where(Task.date == search)
             elif by == 'term':
-                return self.task.select(Task).where(Task.name == search)
+                return self.task.select().where(
+                    (Task.name.contains(search)) |
+                    (Task.notes.contains(search))
+                )
             elif by == 'id':
                 return self.task.get(Task.id == search)
             elif by == 'project':
-                return self.task.select(Task).where(
+                return self.task.select().where(
                     Task.project.contains(search))
             else:
                 return False
         else:
             return False
 
-        return result
-
     def all_tasks(self):
         """Retrieves all Tasks from database"""
         tasks = self.task.select().order_by(Task.date.desc())
         return tasks
 
-    def add_task(self, task={}):
+    def add_task(self, task):
         """Given a Dict of Task values,
         creates a new Task and saves to database.
 
         Keyword arguments:
         task -- Dict of Task values.
         """
+
         if task:
             for k, v in task.items():
                 if v is None:
                     return False
+
             new_task = self.task.create(**task)
             return new_task
         else:
-            return None
+            return False
 
     def connect(self):
         """Creates or connects to database,
         defined in conf/settings.py.
         """
+
         if isinstance(self.db, SqliteDatabase):
             self.db.connect()
             self.db.create_tables([Task], safe=True)
@@ -115,6 +119,7 @@ class Log:
         Keyword arguments:
         name -- User input project name
         """
+
         if name is not None:
             return name.lower().replace(' ', '_')
         else:
@@ -125,6 +130,7 @@ class Log:
         """Returns True if date is actually a date,
         based-on a pre-defined date format.
         """
+
         try:
             datetime.strptime(date, '%m/%d/%Y')
         except ValueError:
@@ -153,6 +159,7 @@ class Log:
         date -- a string date
         fmt -- format of the passed in date
         """
+
         try:
             date = datetime.strptime(date, fmt)
             return date
