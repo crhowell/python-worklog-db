@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from conf import settings
-from logs.models.task import Task
+from logs.models.task import Task, DB
 from peewee import *
 
 
@@ -99,18 +98,6 @@ class Log:
         else:
             return False
 
-    def connect(self):
-        """Creates or connects to database,
-        defined in conf/settings.py.
-        """
-
-        if isinstance(self.db, SqliteDatabase):
-            self.db.connect()
-            self.db.create_tables([Task], safe=True)
-            return True
-        else:
-            return False
-
     @staticmethod
     def parse_project_name(name=None):
         """Converts a project name into a consistent format,
@@ -166,7 +153,14 @@ class Log:
         except ValueError:
             return False
 
+    def initialize(self):
+        """Creates or connects to database,
+        defined in conf/settings.py.
+        """
+        db = DB
+        db.connect()
+        db.create_tables([Task], safe=True)
+
     def __init__(self):
-        self.db = SqliteDatabase(settings.DB)
-        self.connect()
+        self.initialize()
         self.task = Task

@@ -4,7 +4,7 @@ from peewee import *
 from conf import settings
 
 
-db = SqliteDatabase(settings.DB)
+DB = SqliteDatabase(settings.DB)
 
 
 class Task(Model):
@@ -16,7 +16,7 @@ class Task(Model):
     date = DateField(default=datetime.today)
 
     class Meta:
-        database = db
+        database = DB
 
     def save(self, *args, **kwargs):
         if self.project:

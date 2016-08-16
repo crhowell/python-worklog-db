@@ -1,9 +1,13 @@
-import os
 from datetime import datetime
 import unittest
 
 from logs import log
-from conf import settings
+from logs.models.task import Task
+from peewee import *
+
+TEST_DB = SqliteDatabase(':memory:')
+TEST_DB.connect()
+TEST_DB.create_tables([Task], safe=True)
 
 TEST_DATA = {
     'employee': 'Test 1',
